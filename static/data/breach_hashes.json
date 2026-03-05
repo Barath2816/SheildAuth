@@ -1,0 +1,84 @@
+[
+    {
+        "hash": "BB85F0E4B9E156BE738B7B853FD9DDE8377B51B4",
+        "breach": "Test Data Breach",
+        "year": "2025",
+        "data": "Email, Password"
+    },
+    {
+        "hash": "13796E376A7DFCFC8342E619B85C195044243064",
+        "breach": "Test Data Breach",
+        "year": "2025",
+        "data": "Email, Password"
+    },
+    {
+        "email": "password@gmail.com",
+        "hash": "BB85F0E4B9E156BE738B7B853FD9DDE8377B51B4",
+        "breach": "Facebook Data Exposure",
+        "year": "2019",
+        "data": "Email, Phone Number"
+    },
+    {
+        "email": "barath2816@gmail.com",
+        "hash": "13796E376A7DFCFC8342E619B85C195044243064",
+        "breach": "Yahoo Data Breach",
+        "year": "2016",
+        "data": "Email, Password, Phone Number"
+    },
+    {
+        "email": "john.smith@cybergate.com",
+        "hash": "1F86006D7C75FD52CA581A409BBCE2D6E5D23AC7",
+        "breach": "Twitter Security Leak",
+        "year": "2020",
+        "data": "Email, Username"
+    },
+    {
+        "email": "emma.wilson@techcore.io",
+        "hash": "91AE4DE33990E602F90AC279954C08D13CC7DCBF",
+        "breach": "Dropbox Security Incident",
+        "year": "2012",
+        "data": "Email, Password"
+    },
+    {
+        "email": "david.brown@securemail.net",
+        "hash": "D23E97DB8DD10C46C9B38F21DCC196A0C510A0F3",
+        "breach": "Yahoo Data Breach",
+        "year": "2016",
+        "data": "Email, Password, Phone Number"
+    },
+    {
+        "email": "sophia.johnson@datashield.org",
+        "hash": "2712C9FE7AFFE205AE35F71950BD3354227A4B56",
+        "breach": "LinkedIn Data Breach",
+        "year": "2012",
+        "data": "Email, Password"
+    },
+    {
+        "email": "michael.davis@netshield.com",
+        "hash": "560CB7089564A8ADFF246677388DBD179A0669AC",
+        "breach": "Quora Data Breach",
+        "year": "2018",
+        "data": "Email, Password, Username"
+    },
+    {
+        "email": "olivia.miller@cloudsecure.io",
+        "hash": "541E89C067775C647D158F32CF9C578FC1A432B7",
+        "breach": "Twitter Security Leak",
+        "year": "2020",
+        "data": "Email, Username"
+    },
+    {
+        "email": "daniel.taylor@alphatech.com",
+        "hash": "1CC65A0EB5C2C6484445D2D8ED8D3118FE34339D",
+        "breach": "Dropbox Security Incident",
+        "year": "2012",
+        "data": "Email, Password"
+    },
+    {
+        "email": "ava.anderson@cybervault.net",
+        "hash": "E80D5FA34B933B4DF13705A6A25BC6A2C0458E07",
+        "breach": "Twitter Security Leak",
+        "year": "2020",
+        "data": "Email, Username"
+    }
+]

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="auth-wrapper">
+
+<div class="auth-card">
+
+<h2>Create Your ShieldAuth Account</h2>
+<p class="auth-sub">Secure Registration Portal</p>
+
+<form method="POST">
+
+<div class="input-group">
+<input type="text" name="username" placeholder="Choose Username" required>
+</div>
+
+<div class="input-group">
+<input type="password" name="password" placeholder="Create Password" required>
+</div>
+
+<button type="submit" class="auth-btn">
+Register
+</button>
+
+</form>
+
+<p class="switch-auth">
+Already have an account?
+<a href="/login">Back to Login</a>
+</p>
+
+</div>
+
+</div>
+
+{% endblock %}

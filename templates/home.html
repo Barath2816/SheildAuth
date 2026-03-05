@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card welcome">
+
+<h1>Welcome to ShieldAuth</h1>
+
+<p>
+ShieldAuth is a cybersecurity toolkit designed to help users protect their digital identity.<br>
+The platform provides security tools that analyze passwords and detect data breaches.<br>
+It allows users to encrypt sensitive files and safeguard their confidential data.<br>
+The system also detects phishing websites that attempt to steal login credentials.<br>
+ShieldAuth helps users understand security risks and improve their online protection.
+</p>
+
+</div>
+
+
+<h2>Security Tools</h2>
+
+<div class="tools">
+
+<div class="tool-card">
+
+<i class="fa-solid fa-key tool-icon"></i>
+
+<h3>Password Analyzer</h3>
+
+<p>
+This module analyzes password strength and identifies weak passwords.
+It helps users create strong passwords that are resistant to brute-force
+and dictionary attacks.
+</p>
+
+<a href="/password" class="btn">Use Tool</a>
+
+</div>
+
+
+<div class="tool-card">
+
+<i class="fa-solid fa-envelope tool-icon"></i>
+
+<h3>Email Breach Detection</h3>
+
+<p>
+This module checks whether an email address has appeared in known
+data breaches. It alerts users if their email credentials may have
+been compromised.
+</p>
+
+<a href="/email" class="btn">Use Tool</a>
+
+</div>
+
+
+<div class="tool-card">
+
+<i class="fa-solid fa-lock tool-icon"></i>
+
+<h3>File Encryption</h3>
+
+<p>
+This module allows users to encrypt sensitive files using strong
+encryption algorithms, ensuring that only authorized users can
+access the protected data.
+</p>
+
+<a href="/file" class="btn">Use Tool</a>
+
+</div>
+
+
+<div class="tool-card">
+
+<i class="fa-solid fa-fish tool-icon"></i>
+
+<h3>Phishing Detection</h3>
+
+<p>
+This module analyzes suspicious URLs and identifies potential
+phishing websites designed to steal login credentials or
+personal information.
+</p>
+
+<a href="/phishing" class="btn">Use Tool</a>
+
+</div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="result-page">
+
+<div class="result-card">
+
+<div class="success-icon">
+✔
+</div>
+
+<h2>File Encrypted Successfully</h2>
+
+<p class="result-sub">
+Your file has been securely encrypted and is ready to share.
+</p>
+
+<div class="share-box">
+
+<label>Secure Share Link</label>
+
+<div class="link-box">
+
+<input type="text" value="{{ link }}" id="shareLink" readonly>
+
+<button onclick="copyLink()">Copy</button>
+
+</div>
+
+</div>
+
+<div class="result-actions">
+
+<a href="/file" class="btn-back">Encrypt Another File</a>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function copyLink(){
+
+const copyText = document.getElementById("shareLink");
+
+copyText.select();
+copyText.setSelectionRange(0,99999);
+
+navigator.clipboard.writeText(copyText.value);
+
+alert("Link copied to clipboard!");
+
+}
+
+</script>
+
+{% endblock %}

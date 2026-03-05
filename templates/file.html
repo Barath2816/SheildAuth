@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="file-page">
+
+<div class="file-container module-float">
+
+<h2>🔐 Secure File Encryption</h2>
+<p class="module-sub">Encrypt and decrypt files securely</p>
+
+<div class="file-grid">
+
+<!-- ENCRYPTION -->
+
+<div class="file-card">
+
+<h3>File Encryption</h3>
+
+<form action="/encrypt" method="POST" enctype="multipart/form-data">
+
+<div class="file-upload">
+<input type="file" name="file" required>
+</div>
+
+<input type="password" name="password" placeholder="Enter encryption password" required>
+
+<button class="btn encrypt-btn">Encrypt File</button>
+
+</form>
+
+</div>
+
+
+<!-- DECRYPTION -->
+
+<div class="file-card">
+
+<h3>File Decryption</h3>
+
+<form action="/decrypt" method="POST" enctype="multipart/form-data">
+
+<div class="file-upload">
+<input type="file" name="file" required>
+</div>
+
+<input type="password" name="password" placeholder="Enter decryption password" required>
+
+{% if decrypt_error %}
+<p class="decrypt-error">{{ decrypt_error }}</p>
+{% endif %}
+
+<button class="btn decrypt-btn">Decrypt File</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

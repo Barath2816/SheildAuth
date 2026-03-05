@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ShieldAuth</title>
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" height="70" alt="ShieldAuth Logo">
+            <span>ShieldAuth</span>
+        </div>
+
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">
+                <i class="fa-solid fa-house"></i> Home
+            </a>
+
+            <a href="{{ url_for('home') }}#about">
+                <i class="fa-solid fa-circle-info"></i> About Us
+            </a>
+
+            <a href="{{ url_for('home') }}#contact">
+                <i class="fa-solid fa-address-book"></i> Contact
+            </a>
+
+            {% if session.get("user") %}
+            <a href="{{ url_for('logout') }}" class="nav-login">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="nav-login">
+                <i class="fa-solid fa-user"></i> Login
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        {% block content %}
+        <!-- Child templates will inject content here -->
+        {% endblock %}
+    </div>
+
+    {% if request.endpoint not in ['login', 'register'] %}
+    <!-- ABOUT SECTION -->
+    <section id="about" class="about-section">
+        <h2>About ShieldAuth</h2>
+        <p class="about-text">
+            ShieldAuth is a cybersecurity toolkit designed to help users protect their digital identity.
+            It includes tools for password strength analysis, email breach detection,
+            secure file encryption, and phishing detection.
+        </p>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="contact-section">
+        <h2>Contact Us</h2>
+        <p>Connect with the developer through social platforms.</p>
+        <div class="social-links">
+            <a href="https://www.instagram.com/baratthhhhhh?igsh=N2pscWJ2Mm9iNTk=" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://x.com/barath_2816" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+            <a href="https://www.linkedin.com/in/barath-p-90792234a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://github.com/Barath2816" target="_blank"><i class="fa-brands fa-github"></i></a>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <p>© 2026 ShieldAuth. All rights reserved.</p>
+    </footer>
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='javascript/script.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="phishing-page">
+
+<div class="phishing-container module-float">
+<h2>🛡 Phishing Detection System</h2>
+<p class="module-sub">Analyze suspicious emails, links, or messages</p>
+
+<form id="phishingForm">
+
+<textarea 
+id="phishingInput"
+placeholder="Paste suspicious email, link, or message here..."
+required
+></textarea>
+
+<button type="submit" class="btn analyze-btn">
+<i class="fa-solid fa-magnifying-glass"></i> Analyze Message
+</button>
+
+</form>
+
+<div id="phishingResult" class="phishing-result"></div>
+
+</div>
+</div>
+
+{% endblock %}

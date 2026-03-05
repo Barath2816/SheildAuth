@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="email-wrapper">
+
+<div class="email-card">
+
+<h2>Email Breach Detection</h2>
+<p class="email-sub">
+Check whether an email address appears in known breach databases.
+</p>
+
+<form id="emailForm">
+
+<div class="email-input-box">
+<input type="email" id="emailInput" placeholder="Enter your email address" required>
+</div>
+
+<button type="submit" class="btn analyze-btn">
+Analyze Email
+</button>
+
+</form>
+
+<div id="emailResult" class="email-result"></div>
+
+</div>
+</div>
+
+{% endblock %}

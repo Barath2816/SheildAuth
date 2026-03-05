@@ -5,24 +5,16 @@ import hashlib
 import os
 import re
 from datetime import datetime
-
+from functools import wraps
 from urllib.parse import urlparse
+
 from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for, session
 from flask_bcrypt import Bcrypt
 from cryptography.fernet import Fernet, InvalidToken
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-app.secret_key = "change_this_secret_key"
-from functools import wraps
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "user" not in session:
-            return redirect(url_for("login"))
-        return f(*args, **kwargs)
-    return decorated_function
+app.secret_key = os.environ.get("SECRET_KEY", "change_this_secret_key")
 
 # ================= SETUP =================
 
@@ -31,8 +23,9 @@ shared_files = {}
 os.makedirs("uploads", exist_ok=True)
 os.makedirs("encrypted", exist_ok=True)
 os.makedirs("decrypted", exist_ok=True)
+os.makedirs("static/data", exist_ok=True)
 
-# Ensure users.json exists (for deployment environments)
+# Ensure users.json exists
 if not os.path.exists("users.json"):
     with open("users.json", "w") as f:
         json.dump({}, f)
@@ -41,17 +34,16 @@ if not os.path.exists("users.json"):
 
 def load_users():
     try:
-        with open("users.json","r") as f:
+        with open("users.json", "r") as f:
             return json.load(f)
-    except:
+    except (FileNotFoundError, json.JSONDecodeError):
         return {}
 
 def save_users(users):
-    with open("users.json","w") as f:
-        json.dump(users,f,indent=4)
+    with open("users.json", "w") as f:
+        json.dump(users, f, indent=4)
 
-from functools import wraps
-from flask import redirect, url_for
+# ================= LOGIN REQUIRED =================
 
 def login_required(f):
     @wraps(f)
@@ -61,7 +53,16 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# ---------- REGISTER ----------
+# ================= HOME =================
+
+@app.route("/")
+def home():
+    if "user" in session:
+        return render_template("home.html")
+    return redirect(url_for("login"))
+
+# ================= REGISTER =================
+
 @app.route("/register", methods=["GET","POST"])
 def register():
 
@@ -76,6 +77,7 @@ def register():
             return "User exists"
 
         hashed = bcrypt.generate_password_hash(password).decode("utf-8")
+
         users[username] = hashed
         save_users(users)
 
@@ -83,7 +85,8 @@ def register():
 
     return render_template("register.html")
 
-# ---------- LOGIN ----------
+# ================= LOGIN =================
+
 @app.route("/login", methods=["GET","POST"])
 def login():
 
@@ -96,30 +99,23 @@ def login():
 
         users = load_users()
 
-        # Check user exists
         if username in users:
 
-            # Verify hashed password
             if bcrypt.check_password_hash(users[username], password):
+
                 session["user"] = username
                 return redirect(url_for("home"))
 
-        # If anything fails
         error = "Invalid username or password ❌"
 
     return render_template("login.html", error=error)
+
 @app.route("/logout")
 def logout():
     session.pop("user", None)
     return redirect(url_for("login"))
 
 # ================= PAGES =================
-
-@app.route("/")
-def index():
-    if "user" in session:
-        return redirect(url_for("home"))
-    return redirect(url_for("login"))
 
 @app.route("/password")
 @login_required
@@ -150,7 +146,9 @@ common_words = ["password","admin","123456","qwerty","letmein"]
 def analyze_password():
 
     data = request.get_json()
-    pwd = data["password"]
+
+    pwd = data.get("password","")
+
     length = len(pwd)
 
     if length < 8:
@@ -172,12 +170,13 @@ def analyze_password():
     complexity_text = ["Very Poor","Poor","Good","Strong","Very Strong"][complexity]
 
     dictionary = "Looks Safe"
+
     for w in common_words:
         if w in pwd.lower():
             dictionary = "Contains Common Word ❌"
-            break
 
     crack = "Years"
+
     if length < 6:
         crack = "Instant"
     elif length < 8:
@@ -190,6 +189,7 @@ def analyze_password():
     entropy = length * complexity * 2
 
     patterns = ["qwerty","asdf","1234","abcd"]
+
     pattern_warning = "No patterns detected"
 
     for p in patterns:
@@ -197,6 +197,7 @@ def analyze_password():
             pattern_warning = "Keyboard pattern detected ⚠️"
 
     repeat_warning = "Looks varied"
+
     if len(set(pwd)) <= 2:
         repeat_warning = "Too many repeating characters ⚠️"
 
@@ -220,9 +221,10 @@ def check_email():
     data = request.get_json()
 
     if not data or "email" not in data:
-        return jsonify({"error": "Invalid request"}), 400
+        return jsonify({"error":"Invalid request"}),400
 
     email = data["email"].strip().lower()
+
     sha = hashlib.sha1(email.encode()).hexdigest().upper()
 
     try:
@@ -232,7 +234,9 @@ def check_email():
         breaches = []
 
     for b in breaches:
+
         if b["hash"].upper() == sha:
+
             return jsonify({
                 "breached": True,
                 "risk_level": "HIGH",
@@ -251,41 +255,48 @@ def check_email():
         "checked_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "recommendation": "No action needed. Continue using strong passwords."
     })
+
 # ================= FILE ENCRYPTION =================
 
 def generate_key_from_password(password):
-    key=hashlib.sha256(password.encode()).digest()
+
+    key = hashlib.sha256(password.encode()).digest()
+
     return base64.urlsafe_b64encode(key)
 
 @app.route("/encrypt", methods=["POST"])
 @login_required
 def encrypt():
 
-    file=request.files["file"]
-    password=request.form["password"]
+    file = request.files["file"]
 
-    cipher=Fernet(generate_key_from_password(password))
+    password = request.form["password"]
 
-    filepath="uploads/"+file.filename
+    cipher = Fernet(generate_key_from_password(password))
+
+    filepath = "uploads/"+file.filename
+
     file.save(filepath)
 
     with open(filepath,"rb") as f:
-        data=f.read()
+        data = f.read()
 
-    encrypted_data=cipher.encrypt(data)
+    encrypted_data = cipher.encrypt(data)
 
-    unique_name=str(uuid.uuid4())+".enc"
-    encrypted_path="encrypted/"+unique_name
+    unique_name = str(uuid.uuid4())+".enc"
+
+    encrypted_path = "encrypted/"+unique_name
 
     with open(encrypted_path,"wb") as f:
         f.write(encrypted_data)
 
     os.remove(filepath)
 
-    share_id=str(uuid.uuid4())
-    shared_files[share_id]=encrypted_path
+    share_id = str(uuid.uuid4())
 
-    share_link=url_for("download_shared",file_id=share_id,_external=True)
+    shared_files[share_id] = encrypted_path
+
+    share_link = url_for("download_shared", file_id=share_id, _external=True)
 
     return render_template("encrypt_result.html", link=share_link)
 
@@ -302,23 +313,27 @@ def download_shared(file_id):
 def decrypt():
 
     file = request.files["file"]
+
     password = request.form["password"]
 
     cipher = Fernet(generate_key_from_password(password))
 
     filepath = "uploads/" + file.filename
+
     file.save(filepath)
 
     try:
-        with open(filepath, "rb") as f:
+
+        with open(filepath,"rb") as f:
             encrypted_data = f.read()
 
         decrypted_data = cipher.decrypt(encrypted_data)
 
-        decrypted_filename = "decrypted_" + file.filename.replace(".enc", "")
+        decrypted_filename = "decrypted_" + file.filename.replace(".enc","")
+
         decrypted_path = "decrypted/" + decrypted_filename
 
-        with open(decrypted_path, "wb") as f:
+        with open(decrypted_path,"wb") as f:
             f.write(decrypted_data)
 
         os.remove(filepath)
@@ -329,10 +344,8 @@ def decrypt():
 
         os.remove(filepath)
 
-        return render_template(
-            "file.html",
-            decrypt_error="Invalid password or corrupted file ❌"
-        )
+        return render_template("file.html",
+                               decrypt_error="Invalid password or corrupted file ❌")
 
 # ================= PHISHING DETECTION =================
 
@@ -341,31 +354,27 @@ def decrypt():
 def detect_phishing():
 
     data = request.get_json()
+
     content = data["content"].lower()
 
     score = 0
+
     reasons = []
 
     keywords = [
-        "urgent",
-        "verify",
-        "click here",
-        "bank",
-        "password",
-        "limited time",
-        "account suspended",
-        "confirm identity",
-        "update account",
-        "login now"
+        "urgent","verify","click here","bank","password",
+        "limited time","account suspended","confirm identity",
+        "update account","login now"
     ]
 
-    # keyword detection
     for word in keywords:
+
         if word in content:
+
             score += 2
+
             reasons.append(f"Suspicious keyword: {word}")
 
-    # url detection
     urls = re.findall(r'(https?://[^\s]+)', content)
 
     for url in urls:
@@ -378,7 +387,6 @@ def detect_phishing():
             score += 3
             reasons.append("Suspicious login/verify link")
 
-    # risk level
     if score >= 8:
         level = "HIGH RISK"
     elif score >= 4:
@@ -393,6 +401,7 @@ def detect_phishing():
         "reasons": reasons,
         "urls_found": urls
     })
+
 # ================= START =================
 
 if __name__ == "__main__":

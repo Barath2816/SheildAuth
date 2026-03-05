@@ -116,9 +116,10 @@ def logout():
 # ================= PAGES =================
 
 @app.route("/")
-@login_required
-def home():
-    return render_template("home.html")
+def index():
+    if "user" in session:
+        return redirect(url_for("home"))
+    return redirect(url_for("login"))
 
 @app.route("/password")
 @login_required

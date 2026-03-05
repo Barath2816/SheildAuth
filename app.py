@@ -32,6 +32,11 @@ os.makedirs("uploads", exist_ok=True)
 os.makedirs("encrypted", exist_ok=True)
 os.makedirs("decrypted", exist_ok=True)
 
+# Ensure users.json exists (for deployment environments)
+if not os.path.exists("users.json"):
+    with open("users.json", "w") as f:
+        json.dump({}, f)
+
 # ================= USER SYSTEM =================
 
 def load_users():

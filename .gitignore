@@ -1,0 +1,6 @@
+venv/
+.venv/
+uploads/
+encrypted/
+decrypted/
+__pycache__/

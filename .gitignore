@@ -4,3 +4,5 @@ uploads/
 encrypted/
 decrypted/
 __pycache__/
+secret.key
+users.json

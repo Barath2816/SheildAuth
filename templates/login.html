@@ -1,43 +1,107 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <div class="auth-wrapper">
+    <div class="auth-card">
 
-<div class="auth-card {% if error %}shake{% endif %}">
+        <h2>Welcome to ShieldAuth</h2>
+        <p class="auth-sub">Secure Access Portal</p>
 
-<h2>Welcome to ShieldAuth</h2>
-<p class="auth-sub">Secure Access Portal</p>
+        <form id="loginForm" method="POST" action="{{ url_for('login') }}">
+            <div class="input-group">
+                <input
+                    type="text"
+                    name="username"
+                    id="log-username"
+                    placeholder="Username"
+                    required
+                    autocomplete="username"
+                >
+                <input
+                    type="password"
+                    name="password"
+                    id="log-password"
+                    placeholder="Password"
+                    required
+                    autocomplete="current-password"
+                >
+            </div>
 
-<form method="POST">
+            <!-- Error appears here, right under the password box -->
+            <div class="login-error" id="log-error" style="display:none;"></div>
 
-<div class="input-group">
-<input type="text" name="username" placeholder="Username" required>
+            <button type="submit" class="auth-btn" id="log-btn">
+                <i class="fa-solid fa-right-to-bracket"></i> Login
+            </button>
+        </form>
+
+        <div class="switch-auth">
+            Don't have an account? <a href="{{ url_for('register') }}">Register here</a>
+        </div>
+
+    </div>
 </div>
 
-<div class="input-group">
-<input type="password" name="password" placeholder="Password" 
-class="{% if error %}input-error{% endif %}" required>  
+<script>
+document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-{% if error %}
-<p class="login-error">{{ error }}</p>
-{% endif %}
+    const errorEl  = document.getElementById('log-error');
+    const userEl   = document.getElementById('log-username');
+    const passEl   = document.getElementById('log-password');
+    const btn      = document.getElementById('log-btn');
 
-</div>
+    /* reset */
+    errorEl.style.display = 'none';
+    errorEl.innerHTML     = '';
+    userEl.classList.remove('input-error');
+    passEl.classList.remove('input-error');
 
-<button type="submit" class="auth-btn">
-Login
-</button>
+    /* loading state */
+    btn.disabled  = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing in…';
 
-</form>
+    try {
+        const res  = await fetch(this.action, {
+            method:   'POST',
+            body:     new FormData(this),
+            redirect: 'follow'
+        });
 
-<p class="switch-auth">
-Don't have an account?
-<a href="/register">Register here</a>
-</p>
+        /* Flask redirected → login succeeded → go there */
+        if (res.redirected) {
+            window.location.href = res.url;
+            return;
+        }
 
-</div>
+        /* No redirect → wrong credentials or other error */
+        const body = await res.text();
 
-</div>
+        const lower = body.toLowerCase();
+        if (lower.includes('invalid') || lower.includes('wrong') ||
+            lower.includes('incorrect') || lower.includes('not found') ||
+            lower.includes('user') || lower.includes('password')) {
+            showError('Incorrect username or password. Please try again.');
+        } else {
+            showError('Login failed. Please try again.');
+        }
 
+        userEl.classList.add('input-error');
+        passEl.classList.add('input-error');
+        passEl.value = '';       /* clear password field on failure */
+        userEl.focus();
+
+    } catch (err) {
+        showError('Network error. Please check your connection and try again.');
+    } finally {
+        btn.disabled  = false;
+        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Login';
+    }
+
+    function showError(msg) {
+        errorEl.innerHTML     = '<i class="fa-solid fa-circle-exclamation"></i> ' + msg;
+        errorEl.style.display = 'flex';
+    }
+});
+</script>
 {% endblock %}

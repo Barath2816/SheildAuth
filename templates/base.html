@@ -2,14 +2,22 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ShieldAuth</title>
-    <!-- Main CSS -->
+
+    <!-- Fonts loaded for all pages now that dark theme is site-wide -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
-<body>
+<!-- home-layout applied to every page so the dark navbar + background are site-wide -->
+<body class="home-layout">
+
     <!-- NAVBAR -->
     <div class="navbar">
         <div class="logo">
@@ -21,11 +29,9 @@
             <a href="{{ url_for('home') }}">
                 <i class="fa-solid fa-house"></i> Home
             </a>
-
             <a href="{{ url_for('home') }}#about">
                 <i class="fa-solid fa-circle-info"></i> About Us
             </a>
-
             <a href="{{ url_for('home') }}#contact">
                 <i class="fa-solid fa-address-book"></i> Contact
             </a>
@@ -45,7 +51,6 @@
     <!-- MAIN CONTENT -->
     <div class="container">
         {% block content %}
-        <!-- Child templates will inject content here -->
         {% endblock %}
     </div>
 

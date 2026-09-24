@@ -1,37 +1,100 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <div class="auth-wrapper">
+    <div class="auth-card">
 
-<div class="auth-card">
+        <h2>Create Your ShieldAuth Account</h2>
+        <p class="auth-sub">Secure Registration Portal</p>
 
-<h2>Create Your ShieldAuth Account</h2>
-<p class="auth-sub">Secure Registration Portal</p>
+        <form id="registerForm" method="POST" action="{{ url_for('register') }}">
+            <div class="input-group">
+                <input
+                    type="text"
+                    name="username"
+                    id="reg-username"
+                    placeholder="Username"
+                    required
+                    autocomplete="username"
+                >
+                <input
+                    type="password"
+                    name="password"
+                    id="reg-password"
+                    placeholder="Create Password"
+                    required
+                    autocomplete="new-password"
+                >
+            </div>
 
-<form method="POST">
+            <!-- Error appears here, right under the password box -->
+            <div class="login-error" id="reg-error" style="display:none;"></div>
 
-<div class="input-group">
-<input type="text" name="username" placeholder="Choose Username" required>
+            <button type="submit" class="auth-btn" id="reg-btn">
+                <i class="fa-solid fa-user-plus"></i> Register
+            </button>
+        </form>
+
+        <div class="switch-auth">
+            Already have an account? <a href="{{ url_for('login') }}">Back to Login</a>
+        </div>
+
+    </div>
 </div>
 
-<div class="input-group">
-<input type="password" name="password" placeholder="Create Password" required>
-</div>
+<script>
+document.getElementById('registerForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-<button type="submit" class="auth-btn">
-Register
-</button>
+    const errorEl  = document.getElementById('reg-error');
+    const userEl   = document.getElementById('reg-username');
+    const btn      = document.getElementById('reg-btn');
 
-</form>
+    /* reset */
+    errorEl.style.display = 'none';
+    errorEl.innerHTML     = '';
+    userEl.classList.remove('input-error');
 
-<p class="switch-auth">
-Already have an account?
-<a href="/login">Back to Login</a>
-</p>
+    /* loading state */
+    btn.disabled     = true;
+    btn.innerHTML    = '<i class="fa-solid fa-spinner fa-spin"></i> Checking…';
 
-</div>
+    try {
+        const res  = await fetch(this.action, {
+            method:   'POST',
+            body:     new FormData(this),
+            redirect: 'follow'          /* fetch follows Flask's 302 automatically */
+        });
 
-</div>
+        /* Flask redirected → registration succeeded → go there */
+        if (res.redirected) {
+            window.location.href = res.url;
+            return;
+        }
 
+        /* No redirect → Flask returned a plain response (e.g. "User exists") */
+        const body = await res.text();
+
+        if (body.toLowerCase().includes('user') || body.toLowerCase().includes('exist')) {
+            showError('That username is already taken. Please choose a different one.');
+            userEl.classList.add('input-error');
+            userEl.focus();
+        } else {
+            /* Unexpected response — fall back to normal submit */
+            showError('Something went wrong. Please try again.');
+        }
+
+    } catch (err) {
+        showError('Network error. Please check your connection and try again.');
+    } finally {
+        btn.disabled  = false;
+        btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Register';
+    }
+
+    function showError(msg) {
+        errorEl.innerHTML     = '<i class="fa-solid fa-circle-exclamation"></i> ' + msg;
+        errorEl.style.display = 'flex';
+    }
+});
+</script>
 {% endblock %}

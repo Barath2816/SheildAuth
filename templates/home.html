@@ -1,92 +1,53 @@
 {% extends "base.html" %}
 
 {% block content %}
+<main class="home-page">
+    <section class="home-hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+            <div class="hero-badge"><span class="hero-badge-dot"><i class="fa-solid fa-check" aria-hidden="true"></i></span> Four tools. One security workspace.</div>
+            <h1 id="hero-title">Defend your<br><em>digital identity.</em></h1>
+            <p class="hero-desc">Analyze passwords, check email breach data, encrypt files, and review suspicious messages with four practical tools in one focused security toolkit.</p>
+            <div class="hero-actions">
+                <a href="#tools" class="btn-primary"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Open toolkit</a>
+                <a href="#about" class="btn-ghost">How it works <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+        </div>
+    </section>
 
-<div class="card welcome">
+    <section class="home-stats" aria-label="ShieldAuth project details">
+        <div class="home-stat"><div class="stat-num">04</div><div class="stat-label">Focused security tools<br>in one workspace</div></div>
+        <div class="home-stat"><div class="stat-num">Bcrypt</div><div class="stat-label">Password hashing<br>for account credentials</div></div>
+        <div class="home-stat"><div class="stat-num">Fernet</div><div class="stat-label">Symmetric encryption<br>for file protection</div></div>
+    </section>
 
-<h1>Welcome to ShieldAuth</h1>
-
-<p>
-ShieldAuth is a cybersecurity toolkit designed to help users protect their digital identity.<br>
-The platform provides security tools that analyze passwords and detect data breaches.<br>
-It allows users to encrypt sensitive files and safeguard their confidential data.<br>
-The system also detects phishing websites that attempt to steal login credentials.<br>
-ShieldAuth helps users understand security risks and improve their online protection.
-</p>
-
-</div>
-
-
-<h2>Security Tools</h2>
-
-<div class="tools">
-
-<div class="tool-card">
-
-<i class="fa-solid fa-key tool-icon"></i>
-
-<h3>Password Analyzer</h3>
-
-<p>
-This module analyzes password strength and identifies weak passwords.
-It helps users create strong passwords that are resistant to brute-force
-and dictionary attacks.
-</p>
-
-<a href="/password" class="btn">Use Tool</a>
-
-</div>
-
-
-<div class="tool-card">
-
-<i class="fa-solid fa-envelope tool-icon"></i>
-
-<h3>Email Breach Detection</h3>
-
-<p>
-This module checks whether an email address has appeared in known
-data breaches. It alerts users if their email credentials may have
-been compromised.
-</p>
-
-<a href="/email" class="btn">Use Tool</a>
-
-</div>
-
-
-<div class="tool-card">
-
-<i class="fa-solid fa-lock tool-icon"></i>
-
-<h3>File Encryption</h3>
-
-<p>
-This module allows users to encrypt sensitive files using strong
-encryption algorithms, ensuring that only authorized users can
-access the protected data.
-</p>
-
-<a href="/file" class="btn">Use Tool</a>
-
-</div>
-
-
-<div class="tool-card">
-
-<i class="fa-solid fa-fish tool-icon"></i>
-
-<h3>Phishing Detection</h3>
-
-<p>
-This module analyzes suspicious URLs and identifies potential
-phishing websites designed to steal login credentials or
-personal information.
-</p>
-
-<a href="/phishing" class="btn">Use Tool</a>
-
-</div>
-
-</div>
+    <section class="home-tools" id="tools" aria-labelledby="tools-title">
+        <div class="section-header"><h2 class="section-title" id="tools-title">Security tools</h2><div class="section-line"></div></div>
+        <div class="tools-grid">
+            <a class="tool-card" href="{{ url_for('password') }}">
+                <div class="tool-card-top"><span class="tool-icon-wrap"><i class="fa-solid fa-key" aria-hidden="true"></i></span><i class="fa-solid fa-arrow-up tool-arrow" aria-hidden="true"></i></div>
+                <h3 class="tool-name">Password Analyzer</h3>
+                <p class="tool-desc">Review a password’s strength, spot common patterns, and get a clearer picture of how resistant it may be to guessing.</p>
+                <div class="tool-footer"><i class="fa-solid fa-chart-simple" aria-hidden="true"></i> Strength and pattern analysis</div>
+            </a>
+            <a class="tool-card" href="{{ url_for('email') }}">
+                <div class="tool-card-top"><span class="tool-icon-wrap"><i class="fa-solid fa-envelope" aria-hidden="true"></i></span><i class="fa-solid fa-arrow-up tool-arrow" aria-hidden="true"></i></div>
+                <h3 class="tool-name">Email Breach Detection</h3>
+                <p class="tool-desc">Compare an email address with the breach data included in this project and review the result and recommended next steps.</p>
+                <div class="tool-footer"><i class="fa-solid fa-database" aria-hidden="true"></i> Project breach dataset lookup</div>
+            </a>
+            <a class="tool-card" href="{{ url_for('file') }}">
+                <div class="tool-card-top"><span class="tool-icon-wrap"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><i class="fa-solid fa-arrow-up tool-arrow" aria-hidden="true"></i></div>
+                <h3 class="tool-name">File Encryption</h3>
+                <p class="tool-desc">Encrypt and decrypt files with password-derived Fernet keys. Keep your password available to decrypt protected files later.</p>
+                <div class="tool-footer"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Fernet-based file protection</div>
+            </a>
+            <a class="tool-card" href="{{ url_for('phishing') }}">
+                <div class="tool-card-top"><span class="tool-icon-wrap"><i class="fa-solid fa-link" aria-hidden="true"></i></span><i class="fa-solid fa-arrow-up tool-arrow" aria-hidden="true"></i></div>
+                <h3 class="tool-name">Phishing Detection</h3>
+                <p class="tool-desc">Review message text or URLs for suspicious language and common phishing indicators before deciding how to respond.</p>
+                <div class="tool-footer"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Heuristic message and URL review</div>
+            </a>
+        </div>
+    </section>
+</main>
 {% endblock %}
